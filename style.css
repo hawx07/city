@@ -1,0 +1,30 @@
+/* original styling
+body {
+  background-color: lightblue;
+}
+*/
+
+/* new style */
+body {
+  background-color: #D8D8D8;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+            //position: center;
+            width: %100 !important;
+            height: auto !important;
+}
