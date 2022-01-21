@@ -39,19 +39,19 @@ let photo;
 function preload() {
   // img = loadImage('./d1.svg');
   // people = loadImage('./pe.svg');
-  tree = loadImage('./SVG/tree2.svg');
+  tree = loadImage('./SVG/tree(5).svg');
   
   // cami = loadImage('./c1.svg');
   // cami = loadImage('./4x/SVG/Asset 1.svg');
-  cami = loadImage('./4x/1x/Asset 2.png');
+  cami = loadImage('./SVG/Asset2.png');
   // cami = loadImage('./d1.svg');
 
   for(x=1;x<30;x++){
-	  this["people"+x] = loadImage('./SVG/pe ('+x+').svg');
+	  this["people"+x] = loadImage('./SVG/pe('+x+').svg');
   }
   
     for(x=1;x<6;x++){
-	  this["tree"+x] = loadImage('./SVG/tree ('+x+').svg');
+	  this["tree"+x] = loadImage('./SVG/tree('+x+').svg');
   }
   
   
@@ -61,6 +61,9 @@ function preload() {
 function setup() {
 	  // print("h",cami.height)
 	// print("w",cami.width)
+	print(pixelDensity())
+	// pixelDens=pixelDensity()
+	pixelDensity(1);
 	camiCount=0
       screen = [windowWidth, windowHeight]
      Adcanvas = sort(screen, 0);
@@ -100,6 +103,56 @@ baklava=createGraphics(canvas, canvas)
   //----------------------parameters
   // scaleAll=int(map(fxrand(), 0, 1, 50, 150)) //100
   // scaleAll=50
+  
+  sAngle=int(map(fxrand(),0,1,0,2))
+	switch(sAngle){
+		  case 0:
+			  print("Shadow: Negative")
+			  sAngle=1
+		  break;
+		  case 1:
+			  print("Shadow: Positive")
+			  sAngle=-1
+		  break;
+		  }
+  
+  
+  parkProb=int(map(fxrand(),0,1,50,85))
+  // parkProb=30
+  parkMap=int(map(parkProb,50,85,0,3))
+  // print("parkDensity",parkProb)
+  switch(parkMap){
+		  case 0:
+			  print("parkDensity: High")
+		  break;
+		  case 1:
+			  print("parkDensity: Medium")
+		  break;
+		  case 2:
+			  print("parkDensity: Low")
+		  break;
+		  }
+  
+  // slope=30
+  slope=floor(map(fxrand(), 0, 1, 25, 45))
+  slopeMap=int(map(slope,24,45,0,3))
+  // print("Slope",slope)
+  switch(slopeMap){
+		  case 0:
+			  print("Slope: Low")
+		  break;
+		  case 1:
+			  print("Slope: Medium")
+		  break;
+		  case 2:
+			  print("Slope: High")
+		  break;
+		  }
+  
+  
+  
+  
+  // buildingType=0
   buildingType=floor(map(fxrand(), 0, 1, 0, 3))
   		  switch(buildingType){
 		  case 0:
@@ -114,27 +167,36 @@ baklava=createGraphics(canvas, canvas)
 		  }
   
   
-  
- scaleType=floor(map(fxrand(), 0, 1, 0, 3))
+  scaleType=2
+ // scaleType=floor(map(fxrand(), 0, 1, 0, 4))
   		  switch(scaleType){
 		  case 0:
-			  print("scaleType: Big")
+			  print("Camera: Far")
 			  scaleAll=50
 		  break;
 		  case 1:
-			  print("scaleType: Medium")
+			  print("Camera: Medium")
 			  scaleAll=100
 		  break;
 		  case 2:
-			  print("scaleType: Small")
+			  print("Camera: Close")
+			  scaleAll=150
+		  break;
+		  case 3:
+			  print("Camera: Close")
 			  scaleAll=150
 		  break;
 		  }
-  
-  if(scaleAll==50){katmanSayısı=15}else{katmanSayısı=10}
+		  
+		  
+	s2=scaleAll/100
+	
+	slopetogap=slope*2
+   katmanGap=slopetogap*s2*cnv//60
+  if(scaleAll==50){katmanSayısı=int(15/(katmanGap/(60*s2*cnv)))}else{katmanSayısı=int(12/(katmanGap/(60*s2*cnv)))}
   // katmanSayısı=10
-  s2=scaleAll/100
-  katmanGap=60*s2*cnv
+  
+ 
   // sonKatmanY=katmanGap*katmanSayısı
   // print(sonKatmanY)
   for(aa=1;aa<30;aa++){
@@ -211,9 +273,12 @@ function draw() {
 			// print(üstKatman)
 			colorMode(RGB)
 			segment=4000*cnv/scaleAll
-			 from = color(186.15, 150.41, 91.21);
 			 // from = color(221, 97, 45);
-			 to = color(68.53, 136, 201.45);	
+			 from = color(186.15, 150.41, 91.21);
+			 to = color(68.53, 136, 201.45);
+
+			 from = color(186.15, 150.41, 91.21);
+			 to = color(68.53, 136, 201.45);			 
 				for(x=0;x<segment;x++){
 					cc=lerpColor(from, to, map(x,0,segment,0,1))
 					d.noStroke()
@@ -242,6 +307,7 @@ function draw() {
 			 
 			// d.pop()
 		// }
+		noGap=0
 	  for(c=0;c<(800/scaleAll)+3;c++){
 		  if(layer!=katmanSayısı-1){
 			//recY+=map(fxrand(),0,1,-3*cnv*s2,3*cnv*s2)//Katmanlardaki binalar Y de hafif yükselsin alçalsın
@@ -251,21 +317,40 @@ function draw() {
 		  d.push()
 		  d.fill(20)
 		  d.noStroke()
-		  // if (int(map(fxrand(), 0, 1, 0, 100))>80){//merdiven
-		  // yolX=40*cnv*s2
-		  // for(t=0;t<20;t++){
-			  // d.colorMode(RGB)
-			  // d.stroke(50)
-			  // d.strokeWeight(0.5*cnv*s2)
-			  // d.fill(245-10*t)
-			  
-			// d.rect(recX-6*cnv*s2,recY+19*cnv*s2-katmanGap/20*t,yolX,-katmanGap/20)
-		  // }
-		  // recX+=yolX
-		  // }
 		  
-		  if (int(map(fxrand(), 0, 1, 0, 100))>80){//park 70
-		  yolX=map(fxrand(),0,1,100*cnv*s2,170*cnv*s2)
+		  if(noGap==4){
+		  if (int(map(fxrand(), 0, 1, 0, 100))>1){//merdiven
+		  yolX=40*cnv*s2
+		  for(t=0;t<20;t++){
+			  d.colorMode(RGB)
+			  d.stroke(50)
+			  d.strokeWeight(0.5*cnv*s2)
+			  d.fill(245-10*t)
+			  
+			d.rect(recX-6*cnv*s2,recY+19*cnv*s2-katmanGap/20*t,yolX,-katmanGap/20)
+		  }
+		  for(p=0;p<8;p++){
+			  d.push()
+				d.drawingContext.shadowColor = color(0,0,0,0.4)
+						d.drawingContext.shadowOffsetX = -3*s2*cnv*sAngle;
+						// d.drawingContext.shadowOffsetY = 3*s2*cnv;
+						d.drawingContext.shadowBlur = 2*s2*cnv;
+			  randPeopleX=map(fxrand(),0,1,recX-6*cnv*s2,recX-6*cnv*s2+yolX)
+			  randPeopleY=map(fxrand(),0,1,recY+19*cnv*s2,recY+19*cnv*s2-katmanGap)
+			  d.image(eval("people"+int(map(fxrand(),0,1,1,30))), randPeopleX, randPeopleY-13*cnv*s2)
+			  d.pop()
+		  }
+		  
+		  
+		  
+		  recX+=yolX
+		  }
+		  noGap=0
+		  }
+		  
+		  if(noGap!=0){
+		  if (int(map(fxrand(), 0, 1, 0, 100))>parkProb){//park 70
+		  yolX=map(fxrand(),0,1,70*cnv*s2,170*cnv*s2)
 		  // d2.rect(recX-6*cnv*s2,recY+19*cnv*s2,yolX,-katmanGap)
 		  for(t=0;t<20;t++){
 			  d.colorMode(RGB)
@@ -281,13 +366,36 @@ function draw() {
 			
 			
 		  }
+		  
+		  
+		  
+		  for(p=0;p<20;p++){
+			  d.push()
+				d.drawingContext.shadowColor = color(0,0,0,0.4)
+						d.drawingContext.shadowOffsetX = -3*s2*cnv*sAngle;
+						// d.drawingContext.shadowOffsetY = 3*s2*cnv;
+						d.drawingContext.shadowBlur = 2*s2*cnv;
+			  randPeopleX=map(fxrand(),0,1,recX-6*cnv*s2,recX-6*cnv*s2+yolX)
+			  randPeopleY=map(fxrand(),0,1,recY+19*cnv*s2,recY+19*cnv*s2-katmanGap)
+			  d.image(eval("people"+int(map(fxrand(),0,1,1,30))), randPeopleX, randPeopleY-13*cnv*s2)
+			  d.pop()
+		  }
 				for(p=0;p<10;p++){
 						// d.push()
 						d.colorMode(HSL,360,100,100)
-						tC=color(map(fxrand(),0,1,40,100), map(fxrand(),0,1,20,30), map(fxrand(),0,1,30,40))
-						d.drawingContext.shadowColor = color(tC)
-						d.drawingContext.shadowOffsetX = 0.002*s2*cnv;
-						d.drawingContext.shadowBlur = 0.001*s2*cnv;
+						tC=color(map(fxrand(),0,1,40,100), map(fxrand(),0,1,20,30), map(fxrand(),0,1,50,60))
+						// d.drawingContext.shadowColor = color(tC)
+						// d.drawingContext.shadowOffsetX = 0.002*s2*cnv;
+						// d.drawingContext.shadowBlur = 0.001*s2*cnv;
+						
+						// d.drawingContext.shadowColor = color(0,0,0,0.6)
+						// d.drawingContext.shadowOffsetX = -6*s2*cnv*sAngle;
+						// d.drawingContext.shadowOffsetY = 10*s2*cnv;
+						// d.drawingContext.shadowBlur = 2*s2*cnv;
+						
+						
+						
+						
 						// d.pop()
 						// colorMode(RGB)
 		  			randTreeX=map(fxrand(),0,1,recX-6*cnv*s2,recX-6*cnv*s2+yolX)
@@ -307,7 +415,9 @@ function draw() {
 					// print(treeTemp.get(100,100))
 					}
 						
-						
+						treeTemp.drawingContext.shadowColor = color(tC)
+						treeTemp.drawingContext.shadowOffsetX = 0.002*s2*cnv;
+						treeTemp.drawingContext.shadowBlur = 0.001*s2*cnv;
 					treeTemp.image(eval(treeq),0,5*cnv*s2)
 					// treeTemp.loadPixels()
 					// treeTemp.stroke("green")
@@ -333,19 +443,15 @@ function draw() {
 				}
 		  
 		  
-		  for(p=0;p<20;p++){
 		  
-			  randPeopleX=map(fxrand(),0,1,recX-6*cnv*s2,recX-6*cnv*s2+yolX)
-			  randPeopleY=map(fxrand(),0,1,recY+19*cnv*s2,recY+19*cnv*s2-katmanGap)
-			  d.image(eval("people"+int(map(fxrand(),0,1,1,30))), randPeopleX, randPeopleY-13*cnv*s2)
-		  }
 		  
 		  
 		  
 		  recX+=yolX
+		  noGap=0
 		  }
-		  
-		  
+		  }
+		  noGap++
 		  
 		  d.pop()
 		  
@@ -354,7 +460,7 @@ function draw() {
 		  
 		  
 		  d.push()
-		  if (map(fxrand(), 0, 1, 0, 100)>99){//makecami
+		  if (map(fxrand(), 0, 1, 0, 100)>98.5){//makecami
 		  camiX=cami.width-14*cnv*s2
 			d.drawingContext.shadowBlur = 2.5*cnv*s2
 		    d.drawingContext.shadowColor = color(0)
@@ -373,7 +479,7 @@ function draw() {
 		  break;
 		  case 1:
 			  countX=int(map(fxrand(), 0, 1, 4, 6))//bina yan pencere
-			  countY=int(map(fxrand(), 0, 1, 3, 5))//bina dik pencere
+			  countY=int(map(fxrand(), 0, 1, 3, 6))//bina dik pencere
 		  break;
 		  case 2:
 			  countY=int(map(fxrand(), 0, 1, 2+(map(katmanSayısı-layer+1,1,katmanSayısı,1,3)), 4+(map(katmanSayısı-layer+2,1,katmanSayısı,1,7))))//bina dik pencere
@@ -393,6 +499,9 @@ function draw() {
 		  // d.fill(400)
 		  d.drawingContext.shadowBlur = 1.5*cnv*s2
 		  d.drawingContext.shadowColor = color(0)
+		  // d.drawingContext.shadowBlur = 110*cnv*s2
+		  // d.drawingContext.shadowColor = color(0)
+		  // d.drawingContext.shadowOffsetX = 50*s2*cnv;
 		  
 		  if(c%2==0){
 			  dik.background(cL)
@@ -405,8 +514,39 @@ function draw() {
 			  yan.image(pointPopulate,0,0)
 			  d._renderer._setFill(d.drawingContext.createPattern(yan.canvas, 'repeat'));
 		  }
-		  d.rect(recX-gapX+map(fxrand(),0,1,10*cnv*s2,abs(roofDistance)-10*cnv*s2),recY+winY-countY*(gapY+winY)-gapX,7*cnv*s2,-10*cnv*s2)//baca
 		  
+		  
+		  roofType=int(map(fxrand(),0,1,0,3))//rooftype
+		  // roofType=3
+		  if(roofType!=3){
+		  for(bC=0;bC<2;bC++){
+		  bacaX=recX-gapX+map(fxrand(),0,1,15*cnv*s2,abs(roofDistance)-15*cnv*s2)
+		  bacaY=recY+winY-countY*(gapY+winY)-gapX
+		  d.rect(bacaX,bacaY,7*cnv*s2,-10*cnv*s2)//baca
+		  if(fxrand()>0.9){
+		  // dumanTemp=createGraphics(canvas,canvas)
+		  for(bDuman=0;bDuman<map(fxrand(),0,1,200,350);bDuman++){
+			  d.push()
+			  d.colorMode(RGB)
+			  bacaCol=map(fxrand(),0,1,240,255)
+			  
+			  d.strokeWeight(map(fxrand(),0,1,2*cnv*s2,15*cnv*s2))
+			  dumanX=bacaX+3*cnv*s2+map(fxrand(),0,1,-7*cnv*s2,+7*cnv*s2)
+			  dumanYrand=fxrand()
+			  d.stroke(bacaCol,bacaCol,bacaCol,12*(1-dumanYrand))
+			  dumanY=bacaY+map(dumanYrand,0,1,-15*cnv*s2,-map(fxrand(),0,1,40*cnv*s2,90*cnv*s2))
+			  d.point(dumanX,dumanY)
+			  d.pop()
+			
+		  }
+		  // DaddGrain(100)
+		   // d.image(dumanTemp,0,0)
+			
+		  }
+		  }
+		  }
+		  
+
 		  d.strokeWeight(1/(katmanSayısı+1)*(layer+1)*s2/5)
 		  d.rect(recX-gapX,recY+winY,countX*(gapX+winX)+gapX,-countY*(gapY+winY)-gapX) //bina
 		  d.push()
@@ -417,12 +557,14 @@ function draw() {
 		  
 			  d.push()
 			  d.colorMode(RGB)
-			  d.fill(map(fxrand(),0,1,150,240))
+			  fill=(map(fxrand(),0,1,150,240))
+			  d.fill(fill)
 			  
 			  d.rect(recX,recY-3*cnv*s2,countX/2*(gapX+winX)-gapX,winY+3*cnv*s2)//dükkan
-			  fill=color(200)
+			  // fill=color(200)
 			  winCordX=recX
 			  winCordY=recY-3*cnv*s2
+			  
 			  fillInsideBalkon(recX,recY-3*cnv*s2)
 			  
 			  
@@ -432,8 +574,12 @@ function draw() {
 			  fillInsideBalkon(recX+countX/2*(gapX+winX),recY-3*cnv*s2)
 			  d.pop()
 		  d.pop();
-		  balkonType=int(map(fxrand(),0,1,0,3))
-		  roofType=int(map(fxrand(),0,1,0,3))
+		  
+		  bt=[0,1,2,0,1,0]
+		  balkonType=bt[floor(map(fxrand(),0,1,0,6))]
+		  // balkonType=int(map(fxrand(),0,1,0,3))
+		  // balkonType=2
+		  
 		  //print(roofType)
 		  switch(roofType){//----------------------------------------roofType
 		  case 0://boş
@@ -475,7 +621,60 @@ function draw() {
 		  // d.arc(p1[0]+(p2[0]-p1[0])/2, p1[1], (p2[0]-p1[0]), 30*cnv*s2, -PI, 0, PIE);
 		  d.pop();
 		  break;
+		  
+		  case 3:
+		  p2=[recX+countX*(gapX+winX),recY+winY-countY*(gapY+winY)-gapX]
+		  p1=[recX-gapX,recY+winY-countY*(gapY+winY)]
+		  d.push()
+		  d.drawingContext.shadowBlur = 1.5*cnv*s2
+			d.drawingContext.shadowOffsetY = 0.2*s2*cnv;
+			d.drawingContext.shadowColor = color(0)
+		  d.strokeWeight(0.5*cnv*s2)
+		  // d.line(p1[0],p1[1]-10,p2[0],p2[1]-10)
+		  roof.colorMode(HSL,360,100,100)
+		  roof.background(19.86,map(fxrand(),0,1,10,30),map(fxrand(),0,1,10,20))//39,58,68
+		  roof.image(baklava,0,0)
+		  d._renderer._setFill(d.drawingContext.createPattern(roof.canvas, 'repeat'));
+		  d.rect(p1[0],p1[1]-2*winY+7*cnv*s2,countX*(gapX+winX)+gapX,+25*cnv*s2)
+		  
+		  roof.colorMode(HSL,360,100,100)
+		  roof.background(19.86,map(fxrand(),0,1,25,46),60)//39,58,68
+		  roof.image(baklava,0,0)
+		  d._renderer._setFill(d.drawingContext.createPattern(roof.canvas, 'repeat'));
+		  // roofD=dist(p1[0],p1[1],p2[0],p2[1])
+		  // print(abs(roofDistance))
+		  if(c%2==0){
+			  dik.background(cL)
+			  dik.image(dikTemp,0,0)
+			  dik.image(pointPopulate,0,0)
+			  d._renderer._setFill(d.drawingContext.createPattern(dik.canvas, 'repeat'));
+		  }else{
+			  yan.background(cL)
+			  yan.image(yanTemp,0,0)
+			  yan.image(pointPopulate,0,0)
+			  d._renderer._setFill(d.drawingContext.createPattern(yan.canvas, 'repeat'));
 		  }
+		  
+		  
+		  
+		  
+		  calc=abs(roofDistance)/(15*cnv*s2)
+		  // print(roofD)
+		  for(roofl=0;roofl<calc;roofl++){
+			  d.push()
+			  d.strokeWeight(2*cnv*s2)
+			  d._renderer._setStroke(d.drawingContext.createPattern(roof.canvas, 'repeat'));
+			  
+			  
+			  
+		  d.line(p1[0]+5*cnv*s2+15*cnv*s2*roofl,-7*cnv*s2+p1[1],p1[0]+5*cnv*s2+15*cnv*s2*roofl,p1[1]-30*cnv*s2)
+		  d.pop()
+		  }
+		  d.rect(p1[0],p1[1]-winY+3*cnv*s2,countX*(gapX+winX)+gapX,-15*cnv*s2,5*cnv*s2,5*cnv*s2,0,0)
+		  d.pop()
+		  break;
+		  }
+		  
 		  
 		  for(x=0;x<countX;x++){//pencere
 			  for(y=1;y<countY;y++){
@@ -492,16 +691,10 @@ function draw() {
 				if(balkonType==1){//bina yanları balkon
 					if (x==0){//en sol
 						d.rect(winCordX,winCordY,winX,winY+6*cnv*s2)
-						// d.fill(fill)
-						
-						// d.rect(winCordX+1*cnv*s2,winCordY+1*cnv*s2,winX-2*cnv*s2,winY-1*cnv*s2+6*cnv*s2)
+						fill=map(fxrand(),0,1,130,255)
 						fillInsideBalkon(winCordX+1*cnv*s2,winCordY+1*cnv*s2)
 						
-						// d.line(winCordX+2*cnv*s2+winX,winCordY+winY+6*cnv*s2,winCordX-gapX,winCordY+winY+6*cnv*s2)
 						d.fill(cL)
-						// d.drawingContext.shadowBlur = 3.5*cnv*s2
-						// d.drawingContext.shadowOffsetY = 1*s2*cnv;
-						// d.drawingContext.shadowColor = color(0)
 						d.line(winCordX+2*cnv*s2+winX,winCordY+winY-3*cnv*s2,winCordX-gapX,winCordY+winY-3*cnv*s2)
 						d.rect(winCordX-gapX,winCordY+winY+6*cnv*s2,gapX+winX+2*cnv*s2,+3*cnv*s2)//balkon altlık
 						d.noFill()
@@ -509,6 +702,7 @@ function draw() {
 						d.drawingContext.shadowBlur = 1.5*cnv*s2
 						d.drawingContext.shadowOffsetY = 1*s2*cnv;
 						d.drawingContext.shadowColor = color(0)
+						d.drawingContext.shadowOffsetX = -2*s2*cnv*sAngle;
 						
 						d.rect(winCordX+winX+2*cnv*s2,winCordY+winY+6*cnv*s2,-gapX-winX-2*cnv*s2,-29*cnv*s2)//balkonderinlik çizgisi
 						d.pop()
@@ -520,7 +714,7 @@ function draw() {
 						// winCordX=winCordX+2*cnv*s2
 						d.rect(winCordX,winCordY,winX,winY+6*cnv*s2)
 						// d.fill(fill)
-						
+						fill=map(fxrand(),0,1,130,255)
 						// d.rect(winCordX+1*cnv*s2,winCordY+1*cnv*s2,winX-2*cnv*s2,winY-1*cnv*s2+6*cnv*s2)
 						fillInsideBalkon(winCordX+1*cnv*s2,winCordY+1*cnv*s2)
 						d.line(winCordX+gapX+0*cnv*s2+winX,winCordY+winY-3*cnv*s2,winCordX-2*cnv*s2,winCordY+winY-3*cnv*s2)
@@ -535,6 +729,7 @@ function draw() {
 						d.push()
 						d.drawingContext.shadowBlur = 1.5*cnv*s2
 						d.drawingContext.shadowOffsetY = 1*s2*cnv;
+						d.drawingContext.shadowOffsetX = -2*s2*cnv*sAngle;
 						d.drawingContext.shadowColor = color(0)
 						d.rect(winCordX+winX+0*cnv*s2+gapX,winCordY+winY+6*cnv*s2,-gapX-winX-2*cnv*s2,-29*cnv*s2)//balkonderinlik çizgisi
 						d.pop()
@@ -548,7 +743,31 @@ function draw() {
 						makeKlima()
 						makePerde()
 					}
-				}else{
+				}
+				else if(balkonType==2){
+					fillInside(winCordX+1*cnv*s2,winCordY+1*cnv*s2)
+					d.strokeWeight(0.9*s2*cnv)
+					d.line(winCordX+gapX-5*cnv*s2+winX,winCordY+winY-3*cnv*s2,winCordX+0*cnv*s2,winCordY+winY-3*cnv*s2)
+					// d.line(winCordX+gapX+0*cnv*s2+winX,winCordY+winY-3*cnv*s2,winCordX-2*cnv*s2,winCordY+winY-3*cnv*s2)
+					d.drawingContext.shadowBlur = 2*cnv*s2
+						d.drawingContext.shadowOffsetY = 1*s2*cnv;
+						d.drawingContext.shadowOffsetX = -2*s2*cnv*sAngle;
+						d.drawingContext.shadowColor = color(0)
+						d.strokeWeight(0.4*s2*cnv)
+						d.fill(cL)
+					d.rect(winCordX-1*cnv*s2,winCordY+winY+6*cnv*s2,gapX+winX-4*cnv*s2,+3*cnv*s2)//balkon altlık
+					for(bLineX=0;bLineX<8;bLineX++){
+						d.strokeWeight(0.4*s2*cnv)
+							if(bLineX==0){d.strokeWeight(0.7*s2*cnv)}
+							if(bLineX==7){d.strokeWeight(0.7*s2*cnv)}
+							d.line(winCordX+gapX-5.5*cnv*s2+winX-bLineX*2*cnv*s2,winCordY+winY+6*cnv*s2,winCordX+gapX-5.5*cnv*s2+winX-bLineX*2*cnv*s2,winCordY+winY-3*cnv*s2)
+						}
+					// makeKlima()
+					// makePerde()
+				}
+				
+				
+				else{
 					fillInside(winCordX+1*cnv*s2,winCordY+1*cnv*s2)
 					makeKlima()
 					makePerde()
@@ -576,9 +795,15 @@ function draw() {
 					
 					d.colorMode(HSL,360,100,100)
 						tC=color(map(fxrand(),0,1,40,100), map(fxrand(),0,1,20,30), map(fxrand(),0,1,40,50))
-						d.drawingContext.shadowColor = color(tC)
-						d.drawingContext.shadowOffsetX = 0.002*s2*cnv;
-						d.drawingContext.shadowBlur = 0.001*s2*cnv;
+						// d.drawingContext.shadowColor = color(tC)
+						// d.drawingContext.shadowOffsetX = 0.002*s2*cnv;
+						// d.drawingContext.shadowBlur = 0.001*s2*cnv;
+						d.drawingContext.shadowColor = color(0,0,0,0.6)
+						d.drawingContext.shadowOffsetX = -10*s2*cnv*sAngle;
+						d.drawingContext.shadowOffsetY = 10*s2*cnv;
+						d.drawingContext.shadowBlur = 2*s2*cnv;
+						
+						
 					
 					
 					treeq="tree"+floor(map(fxrand(),0,1,1,6))
@@ -593,6 +818,9 @@ function draw() {
 					treeTemp.scale(-1,1)
 					}
 					// treeTemp.tint(50,200)
+					treeTemp.drawingContext.shadowColor = color(tC)
+						treeTemp.drawingContext.shadowOffsetX = 0.002*s2*cnv;
+						treeTemp.drawingContext.shadowBlur = 0.001*s2*cnv;
 					treeTemp.image(eval(treeq),0,5*cnv*s2)
 					
 					
@@ -603,9 +831,9 @@ function draw() {
 					// treeTemp.scale(int(2*cnv*s2),int(map(fxrand(),0,1,150*cnv*s2,200*cnv*s2)))
 					// d.scale(1.3)
 					// d.scale(1/1.3)
-					d.drawingContext.shadowColor = color(41, 55, 27)
-						d.drawingContext.shadowOffsetX = 0.2*s2*cnv;
-						d.drawingContext.shadowBlur = 0.001
+					// d.drawingContext.shadowColor = color(41, 55, 27)
+						// d.drawingContext.shadowOffsetX = 0.2*s2*cnv;
+						// d.drawingContext.shadowBlur = 0.001
 					d.translate(0,-treeTemp.height)
 					// d.image(tree,0,0)
 					d.image(treeTemp,recX+map(fxrand(),0,1,-30*cnv*s2,10*cnv*s2)-30*cnv*s2,recY+20*cnv*s2)
@@ -623,8 +851,14 @@ function draw() {
 	  } 
 	
 	
-	 for(x=0;x<5000*cnv/scaleAll;x++){
+	 for(x=0;x<5000/scaleAll;x++){
+			  d.push()
+						d.drawingContext.shadowColor = color(0,0,0,0.4)
+						d.drawingContext.shadowOffsetX = -5*s2*cnv*sAngle;
+						d.drawingContext.shadowOffsetY = 3*s2*cnv;
+						d.drawingContext.shadowBlur = 2*s2*cnv;
 			  d.image(eval("people"+int(map(fxrand(),0,1,1,30))), map(fxrand(),0,1,0,canvas), recY+3*cnv*s2)
+			  d.pop()
 			  }
 	
 	
@@ -647,13 +881,21 @@ function draw() {
 			image(d,-20*cnv,0)
 		}else{
 			
-		drawingContext.shadowBlur = 50*s2*cnv//80di eskiden
-			drawingContext.shadowColor = color(2)
-			// drawingContext.shadowColor = color(0,0,0,170)
-			drawingContext.shadowOffsetY = -10*s2*cnv;
+		// drawingContext.shadowBlur = 50*s2*cnv//80di eskiden
+			// drawingContext.shadowColor = color(2)
+			// drawingContext.shadowOffsetY = -10*s2*cnv;
+			push()
+			drawingContext.shadowBlur = 30*cnv*s2
+		  drawingContext.shadowColor = color(3,3,3,0.57)
+		  drawingContext.shadowOffsetX = -60*s2*cnv*sAngle;
+			// drawingContext.shadowOffsetY = 30*s2*cnv;
+			
+			
+			
 			
 	image(d,-20*cnv,0)
-		print(layer)
+		// print(layer)
+	pop()
 	}
 	
 	layer++
@@ -663,6 +905,9 @@ else{
 	nextLayer=1}
 				
 			if (nextLayer==1){
+				drawingContext.shadowBlur = 50*s2*cnv//80di eskiden
+			drawingContext.shadowColor = color(2)
+			drawingContext.shadowOffsetY = -2*s2*cnv;
 			push()
 			allimg=get()
 			translate(canvas/2,canvas/2)
@@ -711,6 +956,12 @@ else{
   
 }
 
+
+		// inside.drawingContext.shadowColor = color(0,0,0,0.4)
+		// inside.drawingContext.shadowOffsetX = -5*s2*cnv*sAngle;
+		// inside.drawingContext.shadowOffsetY = 3*s2*cnv;
+		// inside.drawingContext.shadowBlur = 2*s2*cnv;
+
 function fillInside(x,y){
 	
 	d.push()
@@ -721,9 +972,22 @@ function fillInside(x,y){
 				d.drawingContext.shadowColor = color(0)
 				d.rect(winCordX+1*cnv*s2,winCordY+1*cnv*s2,winX-2*cnv*s2,winY-2*cnv*s2)
 	inside.colorMode(RGB)
-	inside.background(fill)
+	// inside.background(fill)
 	
-	lamba=int(map(fxrand(),0,1,1,2))
+inside.push()
+	inside.noStroke()
+	inside.translate(-3*cnv*s2*sAngle,2*cnv*s2)
+	inside.fill(fill-30)
+	inside.rect(-20*cnv*s2,-20*cnv*s2,winX+22*cnv*s2,winY+22*cnv*s2)
+	inside.fill(fill)
+	inside.rect(0,0,winX-2*cnv*s2,winY-2*cnv*s2)
+	
+inside.pop()
+		
+	
+	
+	
+	lamba=int(map(fxrand(),0,1,0,3))
 	switch(lamba){//----------------------------------------lamba
 				case 0://boş
 
@@ -744,10 +1008,47 @@ function fillInside(x,y){
 				//d.stroke(41.82,100,78,map(fill,0,255,0,100))
 				// d.noStroke();
 				// inside.strokeWeight(map(fill,0,255,0.1*cnv*s2,0.2*cnv*s2)) 
+				
+				inside.push()
+				inside.noStroke()
+				for(lr=0;lr<20;lr++){
+					inside.fill(37.41,50,map(fill,0,255,0,100),3)
+				inside.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,20*cnv*s2-lr*cnv*s2)
+				}
+				inside.pop()
+				
 				inside.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,3*cnv*s2)//lamba
 					break;
 				
-				case 2:
+				case 2://rect
+				inside.push()
+				lambaLine=map(fxrand(),0,1,1,3)
+				inside.colorMode(HSB,360,100,100,100)
+				inside.strokeWeight(map(fill,0,255,0.2*cnv*s2,0.4*cnv*s2)) 
+				inside.drawingContext.shadowBlur = 5*s2*cnv
+				inside.drawingContext.shadowColor = color(0)
+				inside.drawingContext.shadowOffsetY = -1*s2*cnv;
+				inside.drawingContext.shadowOffsetX = -1*s2*cnv;
+
+				inside.line(winX/2-1*cnv*s2,0,winX/2-1*cnv*s2,lambaLine*cnv*s2)
+				inside.fill(37.41,50,map(fill,0,255,0,100))
+				// d.fill(41.82,100,78,map(fill,0,255,0,100))
+				//d.stroke(41.82,100,78,map(fill,0,255,0,100))
+				// d.noStroke();
+				// inside.strokeWeight(map(fill,0,255,0.1*cnv*s2,0.2*cnv*s2)) 
+				
+				inside.push()
+				inside.noStroke()
+				for(lr=0;lr<20;lr++){
+					inside.fill(37.41,50,map(fill,0,255,0,100),3)
+				inside.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,20*cnv*s2-lr*cnv*s2)
+				}
+				inside.pop()
+				
+				inside.rectMode(CENTER)
+				inside.rect(winX/2-1*cnv*s2,lambaLine*cnv*s2,2.3*cnv*s2,3*cnv*s2)
+				// insideBalkon.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,3*cnv*s2)//lamba
+				inside.pop()
 
 					break;
 			}
@@ -765,23 +1066,36 @@ function fillInside(x,y){
 }
 
 function fillInsideBalkon(x,y){
-	
+	insideBalkon.colorMode(RGB)
+	d.colorMode(RGB)
 	d.push()
 					d.fill(255)
 				d.rect(winCordX,winCordY,winX,winY+6*cnv*s2)
 				d.fill(fill)
 				d.drawingContext.shadowBlur = 1.5*cnv*s2
 				d.drawingContext.shadowColor = color(0)
-				d.rect(winCordX+1*cnv*s2,winCordY+1*cnv*s2,winX-2*cnv*s2,winY-1*cnv*s2+6*cnv*s2)
+				d.rect(winCordX+1*cnv*s2,winCordY+1*cnv*s2,winX-2*cnv*s2,winY-20*cnv*s2)
 	insideBalkon.colorMode(RGB)
 	insideBalkon.background(fill)
 	
-	lamba=int(map(fxrand(),0,1,1,2))
+insideBalkon.push()
+	insideBalkon.noStroke()
+	insideBalkon.translate(-3*cnv*s2*sAngle,2*cnv*s2)
+	insideBalkon.fill(fill-30)
+	insideBalkon.rect(-20*cnv*s2,-20*cnv*s2,winX+22*cnv*s2,winY+22*cnv*s2)
+	insideBalkon.fill(fill)
+	insideBalkon.rect(0,0,winX-2*cnv*s2,winY+5*cnv*s2)
+	
+insideBalkon.pop()
+	
+	
+	// lamba=2
+	lamba=int(map(fxrand(),0,1,0,3))
 	switch(lamba){//----------------------------------------lamba
 				case 0://boş
 
 					break;
-				case 1:
+				case 1://circle
 								
 				lambaLine=map(fxrand(),0,1,1,3)
 				insideBalkon.colorMode(HSB,360,100,100,100)
@@ -797,10 +1111,44 @@ function fillInsideBalkon(x,y){
 				//d.stroke(41.82,100,78,map(fill,0,255,0,100))
 				// d.noStroke();
 				// inside.strokeWeight(map(fill,0,255,0.1*cnv*s2,0.2*cnv*s2)) 
+				
+				insideBalkon.push()
+				insideBalkon.noStroke()
+				for(lr=0;lr<20;lr++){
+					insideBalkon.fill(37.41,50,map(fill,0,255,0,100),3)
+				insideBalkon.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,20*cnv*s2-lr*cnv*s2)
+				}
+				insideBalkon.pop()
+				
+				
 				insideBalkon.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,3*cnv*s2)//lamba
 					break;
 				
-				case 2:
+				case 2://rect
+				insideBalkon.push()
+				lambaLine=map(fxrand(),0,1,1,3)
+				insideBalkon.colorMode(HSB,360,100,100,100)
+				insideBalkon.strokeWeight(map(fill,0,255,0.2*cnv*s2,0.4*cnv*s2)) 
+				insideBalkon.drawingContext.shadowBlur = 5*s2*cnv
+				insideBalkon.drawingContext.shadowColor = color(0)
+				insideBalkon.drawingContext.shadowOffsetY = -1*s2*cnv;
+				insideBalkon.drawingContext.shadowOffsetX = -1*s2*cnv;
+
+				insideBalkon.line(winX/2-1*cnv*s2,0,winX/2-1*cnv*s2,lambaLine*cnv*s2)
+				insideBalkon.fill(37.41,50,map(fill,0,255,0,100))
+			
+				insideBalkon.push()
+				insideBalkon.noStroke()
+				for(lr=0;lr<20;lr++){
+					insideBalkon.fill(37.41,50,map(fill,0,255,0,100),3)
+				insideBalkon.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,20*cnv*s2-lr*cnv*s2)
+				}
+				insideBalkon.pop()
+				
+				insideBalkon.rectMode(CENTER)
+				insideBalkon.rect(winX/2-1*cnv*s2,lambaLine*cnv*s2,2.3*cnv*s2,3*cnv*s2)
+				insideBalkon.pop()
+				// insideBalkon.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,3*cnv*s2)//lamba
 
 					break;
 			}
@@ -827,35 +1175,43 @@ function makeKlima(){
 				break;
 				case 1:
 				d.push()
-				d.drawingContext.shadowBlur = 1*cnv*s2
-				d.drawingContext.shadowColor = color(0)
-				d.rect(winCordX+1*cnv*s2,winCordY+winY+1*cnv*s2,klima[0],klima[1])
+					d.push()
+						d.drawingContext.shadowColor = color(0,0,0,0.4)
+						d.drawingContext.shadowOffsetX = -2*s2*cnv*sAngle;
+						d.drawingContext.shadowOffsetY = 1.3*s2*cnv;
+						d.drawingContext.shadowBlur = 1.7*s2*cnv;
+					d.rect(winCordX+1*cnv*s2,winCordY+winY+1*cnv*s2,klima[0],klima[1])
+					d.pop()
 				//yan veya dik klima çizgileri ekle
 				d.circle(winCordX+4*cnv*s2,winCordY+winY+4*cnv*s2,4.4*cnv*s2)
 					
-				d.push()
+				// d.push()
 				
-				d.translate(winCordX+4*cnv*s2,winCordY+winY-10*cnv*s2)
+				// d.translate(winCordX+4*cnv*s2,winCordY+winY-10*cnv*s2)
 				// d.scale(0.06*cnv*s2,0.06*cnv*s2);
 				// d.image(img, 0, 0);
 				// d.copy(img, 0, 0, 200, 400, winCordX+4*cnv*s2,winCordY+winY-10*cnv*s2, 50,100);
-				d.pop()
+				// d.pop()
 				
-				d.drawingContext.shadowBlur = 1*cnv*s2
-				d.drawingContext.shadowColor = color(0)
-				d.strokeWeight(0.2*cnv*s2)
-				klimaAx=int(map(fxrand(),0,1,0,1))
+				// d.drawingContext.shadowBlur = 0*cnv*s2
+				// d.drawingContext.shadowColor = color(0)
+				d.strokeWeight(0.3*cnv*s2)
+				// klimaAx=int(map(fxrand(),0,1,0,1))
 				// print(klimaAx)
-				if(klimaAx==0){
+				// if(klimaAx==0){
 					
-						for(r1=0;r1<klima[1]/25*cnv*s2;r1++){
-						d.strokeWeight(0.1*cnv*s2)
-						po= [winCordX+1*cnv*s2,winCordY+winY+1*cnv*s2]
+						// for(r1=0;r1<klima[1]/25*cnv*s2;r1++){
+						// d.strokeWeight(0.1*cnv*s2)
+						for(rc=0;rc<8;rc++){
+						d.line(winCordX+1*cnv*s2,winCordY+winY+rc*cnv*s2,winCordX+1*cnv*s2+klima[0],winCordY+winY+rc*cnv*s2)
 						
-						d.line(po[0],po[1]+r1*cnv*s2,po[0]+klima[0],po[1]+r1*cnv*s2)
 						}
+						// po= [winCordX+1*cnv*s2,winCordY+winY+1*cnv*s2]
+						
+						// d.line(po[0],po[1]+r1*cnv*s2,po[0]+klima[0],po[1]+r1*cnv*s2)
+						// }
 					
-				}
+				// }
 				d.circle(winCordX+4*cnv*s2,winCordY+winY+4*cnv*s2,3.0*cnv*s2)
 				d.circle(winCordX+4*cnv*s2,winCordY+winY+4*cnv*s2,1.0*cnv*s2)
 				d.line(point[0],point[1],point[0]+5,point[0]+5)
@@ -948,6 +1304,19 @@ function addGrain(qty = 20) {
 }
 
 
+function DaddGrain(qty = 20) {
+  dumanTemp.loadPixels();
+  let pD = pixelDensity();
+  let halfImage = 5 * (width * pD) * (height * pD);//pixel density. pixels.lenght
+  for (let i = 0; i < halfImage; i += 4) {
+    dumanTemp.pixels[i] += round(qty * (fxrand() - 0.5));
+    dumanTemp.pixels[i + 1] += round(qty * (fxrand() - 0.5));
+    dumanTemp.pixels[i + 2] += round(qty * (fxrand() - 0.5));
+  }
+  dumanTemp.updatePixels();
+}
+
+
 // function createGrainImage(e = 30, t = 255) {
 	// let a = createImage(canvas * 1, canvas * 1);
 	// a.loadPixels();
@@ -957,3 +1326,14 @@ function addGrain(qty = 20) {
 	// }
 	// return a.updatePixels(), a
 // }
+
+
+
+function keyTyped() {
+  if (key === 'a') {
+    print("a")
+	// background(255)
+	// redraw()
+	draw()
+  } 
+}
