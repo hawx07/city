@@ -26,16 +26,44 @@
 //texture olarak point populatelenmesini ayarla. karesi.
 
 
-let img;
+//bina color paleti ayarla
+//gökyüzü farklı varyasyonlarda lerplesin. kırmızı ve sarı
+//deniz dalgalı
+// scale 50 den bakınca en arkadaki katman birden bitiyor. oraya fazladan katman ekle
+//araba ve ağaç
+
+
+let img,people;
+let photo;
 
 function preload() {
-  img = loadImage('d1.svg');
+  // img = loadImage('./d1.svg');
+  // people = loadImage('./pe.svg');
+  tree = loadImage('./SVG/tree2.svg');
+  
+  // cami = loadImage('./c1.svg');
+  // cami = loadImage('./4x/SVG/Asset 1.svg');
+  cami = loadImage('./4x/1x/Asset 2.png');
+  // cami = loadImage('./d1.svg');
+
+  for(x=1;x<30;x++){
+	  this["people"+x] = loadImage('./SVG/pe ('+x+').svg');
+  }
+  
+    for(x=1;x<6;x++){
+	  this["tree"+x] = loadImage('./SVG/tree ('+x+').svg');
+  }
+  
+  
+  
 }
 
 function setup() {
-	
-      let screen = [windowWidth, windowHeight]
-    let Adcanvas = sort(screen, 0);
+	  // print("h",cami.height)
+	// print("w",cami.width)
+	camiCount=0
+      screen = [windowWidth, windowHeight]
+     Adcanvas = sort(screen, 0);
     print(Adcanvas[0]);
     canvas = Adcanvas[0];
 	orjCanvas=canvas
@@ -51,15 +79,10 @@ function setup() {
   dikTemp=createGraphics(canvas, canvas)
   yanTemp=createGraphics(canvas, canvas)
   pointPopulate=createGraphics(canvas, canvas)
-	
-  
-  
-  
-  
-  
-  
-  
-background(62,186,207)
+sky=createGraphics(canvas, canvas)
+sea=createGraphics(canvas, canvas)
+baklava=createGraphics(canvas, canvas)
+// background(62,186,207)
   // recH=map(fxrand(), 0, 1, 50, canvas)
   // recW=map(fxrand(), 0, 1, 50, canvas)
   //rect(recX,recY,recW,-recH)
@@ -76,33 +99,79 @@ background(62,186,207)
 	
   //----------------------parameters
   // scaleAll=int(map(fxrand(), 0, 1, 50, 150)) //100
-  scaleAll=150
-  katmanSayısı=10
+  // scaleAll=50
+  buildingType=floor(map(fxrand(), 0, 1, 0, 3))
+  		  switch(buildingType){
+		  case 0:
+			  print("buildingType: Big")
+		  break;
+		  case 1:
+			  print("buildingType: Small")
+		  break;
+		  case 2:
+			  print("buildingType: Relative")
+		  break;
+		  }
+  
+  
+  
+ scaleType=floor(map(fxrand(), 0, 1, 0, 3))
+  		  switch(scaleType){
+		  case 0:
+			  print("scaleType: Big")
+			  scaleAll=50
+		  break;
+		  case 1:
+			  print("scaleType: Medium")
+			  scaleAll=100
+		  break;
+		  case 2:
+			  print("scaleType: Small")
+			  scaleAll=150
+		  break;
+		  }
+  
+  if(scaleAll==50){katmanSayısı=15}else{katmanSayısı=10}
+  // katmanSayısı=10
   s2=scaleAll/100
-  katmanGap=80*s2*cnv
-  
-  
+  katmanGap=60*s2*cnv
+  // sonKatmanY=katmanGap*katmanSayısı
+  // print(sonKatmanY)
+  for(aa=1;aa<30;aa++){
+			  eval("people"+aa).resize(eval("people"+aa).width/9*cnv*s2,eval("people"+aa).height/9*cnv*s2)
+			  }
   
   //----------------------/parameters
+  // treeOran=tree.height/tree.width
+  // treeHH=60*s2*cnv
+  // cami2=createGraphics(cami.width, cami.height)
+  // cami2.image(cami,0,0)
+	// cami=cami2
+  // cami.resizeCanvas(360*cnv*s2,360*cnv*s2)
+  cami.resize(0,360*cnv*s2)
+  for(x=1;x<6;x++){
   
+  eval("tree"+x).resize(80*s2*cnv,0)//ağaçları aynı boyuta getir
+  
+  }
 dik.colorMode(HSL,360,100,100)
 yan.colorMode(HSL,360,100,100)
 makeDik()
 makeYan()
-roof.colorMode(HSL,360,100,100)
-roof.background(39,80,85)//39,58,68
 makeRoof()
+
 // for(x=0;x<canvas;x+=4*cnv*s2){
 		// for(y=0;y<canvas;y+=4*cnv*s2){
 		// pointPopulate.point(x,y)
 	// }
 // }
-// for(x=0;x<90000000/(scaleAll*2);x+=1){
-	// pointPopulate.strokeWeight(0.08*cnv*s2)
+// for(x=0;x<40000000/(scaleAll*2);x+=1){
+	// pointPopulate.strokeWeight(0.10*cnv*s2)
 			// pointPopulate.stroke(100)
 // pointPopulate.point(map(fxrand(),0,1,0,canvas),map(fxrand(),0,1,0,canvas))
 // }
-
+// randHueGrad=map(fxrand(),0,1,1,6)
+randHue=map(fxrand(),0,1,0,300)
   gapX=6*s2*cnv
   gapY=14*s2*cnv
   winX=13*s2*cnv
@@ -111,34 +180,210 @@ makeRoof()
   insideBalkon=createGraphics(winX-2*cnv*s2, winY+5*cnv*s2)
   colorMode(HSL,360,100,100)
   recY=orjCanvas-100*cnv
-  for (var i = 0; i < katmanSayısı; i++) {
+  for (var i = -1; i < katmanSayısı+2; i++) {
    this["drawingLayer"+i] = createGraphics(canvas+200*cnv, canvas)
 }
   
   recY-=katmanGap*katmanSayısı
-    for(layer=0;layer<katmanSayısı;layer++){
+layer=0
+nextLayer=0
+}
+
+function draw() {
+  //background(220);
+
+  	// t1.rect(100,100,100,100)
+	// t1.rect(100,200,100,100)
+		if(layer<katmanSayısı){	
+
+    // for(layer=0;layer<katmanSayısı;layer++){
+		if(layer==0){üstKatman=recY}
+
 		
+		
+		tL1=eval(layer-1)
 		d=eval("drawingLayer"+layer)
+		// d2=eval("drawingLayer"+layer)
+		
+		
+				if(layer==0){//gökyüzüne gölge düşmemesi için buraya aldım
+					d.push()
+			// print(üstKatman)
+			colorMode(RGB)
+			segment=4000*cnv/scaleAll
+			 from = color(186.15, 150.41, 91.21);
+			 // from = color(221, 97, 45);
+			 to = color(68.53, 136, 201.45);	
+				for(x=0;x<segment;x++){
+					cc=lerpColor(from, to, map(x,0,segment,0,1))
+					d.noStroke()
+					d.fill(cc)
+				d.rect(+21*s2*cnv,üstKatman-(üstKatman/segment)*x,canvas+20*s2*cnv,-üstKatman/segment-2*cnv*s2)
+				}
+			d.pop()
+			colorMode(HSL,360,100,100)
+			// d.image(sky,0,0)
+		
+		}
+		
+		
+		
+		
+		// print(d2)
 		//stroke(1/katmanSayısı*layer)
 		strokeWeight(1/(katmanSayısı+1)*(layer+1)*s2)
 		recX=0
 		recY+=katmanGap
-		if(layer==katmanSayısı-1){
+		// if(layer==katmanSayısı-1){
 			// print("yer")
-			d.push()
-			d.fill(50)
-			d.rect(0,recY,canvas+300*cnv*s2,37*cnv*s2)//yer: tam oturmuyor
-			
-			d.pop()
-		}
+			// d.push()
+			// d.fill(50)
+			// d.rect(0,recY,canvas+300*cnv*s2,37*cnv*s2)//yer: tam oturmuyor
+			 
+			// d.pop()
+		// }
 	  for(c=0;c<(800/scaleAll)+3;c++){
 		  if(layer!=katmanSayısı-1){
-			recY+=map(fxrand(),0,1,-3*cnv*s2,3*cnv*s2)
+			//recY+=map(fxrand(),0,1,-3*cnv*s2,3*cnv*s2)//Katmanlardaki binalar Y de hafif yükselsin alçalsın
 		  }
-		  countX=int(map(fxrand(), 0, 1, 4, 6))//bina yan pencere
-		  countY=int(map(fxrand(), 0, 1, 5, 10))//bina dik pencere
+		  if(layer!=0){
+			//recY+=map(fxrand(),0,1,-3*cnv*s2,3*cnv*s2)//Katmanlardaki binalar Y de hafif yükselsin alçalsın
+		  d.push()
+		  d.fill(20)
+		  d.noStroke()
+		  // if (int(map(fxrand(), 0, 1, 0, 100))>80){//merdiven
+		  // yolX=40*cnv*s2
+		  // for(t=0;t<20;t++){
+			  // d.colorMode(RGB)
+			  // d.stroke(50)
+			  // d.strokeWeight(0.5*cnv*s2)
+			  // d.fill(245-10*t)
+			  
+			// d.rect(recX-6*cnv*s2,recY+19*cnv*s2-katmanGap/20*t,yolX,-katmanGap/20)
+		  // }
+		  // recX+=yolX
+		  // }
+		  
+		  if (int(map(fxrand(), 0, 1, 0, 100))>80){//park 70
+		  yolX=map(fxrand(),0,1,100*cnv*s2,170*cnv*s2)
+		  // d2.rect(recX-6*cnv*s2,recY+19*cnv*s2,yolX,-katmanGap)
+		  for(t=0;t<20;t++){
+			  d.colorMode(RGB)
+			  d.stroke(50)
+			  d.strokeWeight(0.5*cnv*s2)
+			  d.fill(245-10*t)
+			  
+			  
+			d.rect(recX-6*cnv*s2,recY+19*cnv*s2-katmanGap/20*t,yolX,-katmanGap/20)
+			// d.fill(41, 55, 27,20)
+			// d.rect(recX-6*cnv*s2,recY+19*cnv*s2,yolX,-katmanGap)
+			
+			
+			
+		  }
+				for(p=0;p<10;p++){
+						// d.push()
+						d.colorMode(HSL,360,100,100)
+						tC=color(map(fxrand(),0,1,40,100), map(fxrand(),0,1,20,30), map(fxrand(),0,1,30,40))
+						d.drawingContext.shadowColor = color(tC)
+						d.drawingContext.shadowOffsetX = 0.002*s2*cnv;
+						d.drawingContext.shadowBlur = 0.001*s2*cnv;
+						// d.pop()
+						// colorMode(RGB)
+		  			randTreeX=map(fxrand(),0,1,recX-6*cnv*s2,recX-6*cnv*s2+yolX)
+					randTreeY=map(fxrand(),0,1,recY+19*cnv*s2,recY+19*cnv*s2-katmanGap)
+					randPeopleX=map(fxrand(),0,1,recX-6*cnv*s2,recX-6*cnv*s2+yolX)
+					randPeopleY=map(fxrand(),0,1,recY+19*cnv*s2,recY+19*cnv*s2-katmanGap)
+				d.push()//ağaç
+					treeq="tree"+floor(map(fxrand(),0,1,1,6))
+					// eval(treeq).filter(DILATE)
+					ssTree=map(fxrand(),0,1,0.7,1)
+					treeTemp=createGraphics(eval(treeq).width*ssTree,eval(treeq).height*ssTree)
+					treeTemp.push()
+					treeTemp.scale(ssTree,ssTree)
+					if(fxrand()<0.5){
+					treeTemp.translate(eval(treeq).width,0)
+					treeTemp.scale(-1,1)
+					// print(treeTemp.get(100,100))
+					}
+						
+						
+					treeTemp.image(eval(treeq),0,5*cnv*s2)
+					// treeTemp.loadPixels()
+					// treeTemp.stroke("green")
+					// for(tX=0;tX<treeTemp.width;tX++){
+							// for(tY=0;tY<treeTemp.height;tY++){
+								// val=treeTemp.get(tX,tY)
+								// if(val[0]=0){
+									
+									// treeTemp.set(tX,tY,color(100))
+									
+									// treeTemp.point(tX,tY)
+									
+								// }
+							// }
+						// }
+						// treeTemp.updatePixels()
+					d.translate(0,-treeTemp.height)
+					d.image(treeTemp,randTreeX,randTreeY)
+					
+					treeTemp.pop()
+				d.pop()
+				// d.image(eval("people"+int(map(fxrand(),0,1,1,30))), randPeopleX, randPeopleY)
+				}
+		  
+		  
+		  for(p=0;p<20;p++){
+		  
+			  randPeopleX=map(fxrand(),0,1,recX-6*cnv*s2,recX-6*cnv*s2+yolX)
+			  randPeopleY=map(fxrand(),0,1,recY+19*cnv*s2,recY+19*cnv*s2-katmanGap)
+			  d.image(eval("people"+int(map(fxrand(),0,1,1,30))), randPeopleX, randPeopleY-13*cnv*s2)
+		  }
+		  
+		  
+		  
+		  recX+=yolX
+		  }
+		  
+		  
+		  
+		  d.pop()
+		  
+		  }
+		  
+		  
+		  
+		  d.push()
+		  if (map(fxrand(), 0, 1, 0, 100)>99){//makecami
+		  camiX=cami.width-14*cnv*s2
+			d.drawingContext.shadowBlur = 2.5*cnv*s2
+		    d.drawingContext.shadowColor = color(0)
+			d.image(cami,recX-12*cnv*s2,recY+19*cnv*s2-cami.height)
+		  recX+=camiX
+		  camiCount+=1
+		  }
+		  d.pop()
+		  
+		  
+		  //delen
+		  switch(buildingType){
+		  case 0:
+			  countX=int(map(fxrand(), 0, 1, 4, 6))//bina yan pencere old sett
+			  countY=int(map(fxrand(), 0, 1, 5, 10))//bina dik pencere
+		  break;
+		  case 1:
+			  countX=int(map(fxrand(), 0, 1, 4, 6))//bina yan pencere
+			  countY=int(map(fxrand(), 0, 1, 3, 5))//bina dik pencere
+		  break;
+		  case 2:
+			  countY=int(map(fxrand(), 0, 1, 2+(map(katmanSayısı-layer+1,1,katmanSayısı,1,3)), 4+(map(katmanSayısı-layer+2,1,katmanSayısı,1,7))))//bina dik pencere
+			  countX=int(map(fxrand(), 0, 1, 2+(map(katmanSayısı-layer+1,1,katmanSayısı,1,3)), 4+(map(katmanSayısı-layer+2,1,katmanSayısı,1,5))))//bina yan pencere
+		  break;
+		  }
+		  
 		  d.colorMode(HSL,360,100,100)
-		  cL=color(map(fxrand(), 0, 1, 0, 360),map(fxrand(), 0, 1, 0, 100),map(fxrand(), 0, 1, 80, 90))//70-80
+		  
+		  cL=color(map(fxrand(), 0, 1, randHue, randHue+60),map(fxrand(), 0, 1, 0, 70),map(fxrand(), 0, 1, 80, 90))//70-80
 		  
 		  // cL=color(500)
 		  // cL=color(map(fxrand(), 0, 1, 0, 100),map(fxrand(), 0, 1, 0, 100),map(fxrand(), 0, 1, 40+12*(katmanSayısı-layer), 60+10*(katmanSayısı-layer)))
@@ -161,6 +406,7 @@ makeRoof()
 			  d._renderer._setFill(d.drawingContext.createPattern(yan.canvas, 'repeat'));
 		  }
 		  d.rect(recX-gapX+map(fxrand(),0,1,10*cnv*s2,abs(roofDistance)-10*cnv*s2),recY+winY-countY*(gapY+winY)-gapX,7*cnv*s2,-10*cnv*s2)//baca
+		  
 		  d.strokeWeight(1/(katmanSayısı+1)*(layer+1)*s2/5)
 		  d.rect(recX-gapX,recY+winY,countX*(gapX+winX)+gapX,-countY*(gapY+winY)-gapX) //bina
 		  d.push()
@@ -168,11 +414,22 @@ makeRoof()
 		  
 		  d.rect(recX-gapX,recY+winY-countY*(gapY+winY)-gapX,countX*(gapX+winX)+gapX,gapY-5*cnv*s2)//çatı çizgisi
 		  d.pop()
+		  
 			  d.push()
 			  d.colorMode(RGB)
-			  d.fill(map(fxrand(),0,1,150,255))
+			  d.fill(map(fxrand(),0,1,150,240))
 			  
-			  d.rect(recX,recY-3*cnv*s2,countX*(gapX+winX)-gapX,winY+3*cnv*s2)//dükkan
+			  d.rect(recX,recY-3*cnv*s2,countX/2*(gapX+winX)-gapX,winY+3*cnv*s2)//dükkan
+			  fill=color(200)
+			  winCordX=recX
+			  winCordY=recY-3*cnv*s2
+			  fillInsideBalkon(recX,recY-3*cnv*s2)
+			  
+			  
+			  d.rect(recX+countX/2*(gapX+winX),recY-3*cnv*s2,countX/2*(gapX+winX)-gapX,winY+3*cnv*s2)//dükkan2
+			  winCordX=recX+countX/2*(gapX+winX)
+			  winCordY=recY-3*cnv*s2
+			  fillInsideBalkon(recX+countX/2*(gapX+winX),recY-3*cnv*s2)
 			  d.pop()
 		  d.pop();
 		  balkonType=int(map(fxrand(),0,1,0,3))
@@ -193,6 +450,9 @@ makeRoof()
 			d.drawingContext.shadowColor = color(0)
 		  d.stroke(39,58,68)
 		  // d.fill(39,58,68)
+		  roof.colorMode(HSL,360,100,100)
+		  roof.background(19.86,map(fxrand(),0,1,25,46),60)//39,58,68
+		  roof.image(baklava,0,0)
 		  d._renderer._setFill(d.drawingContext.createPattern(roof.canvas, 'repeat'));
 		  d.strokeWeight(0.2*cnv*s2)
 		  d.triangle(p1[0],p1[1],p2[0],p2[1],p3[0],p3[1])
@@ -211,6 +471,7 @@ makeRoof()
 		  d.fill(39,58,68)
 		  d.strokeWeight(0.2*cnv*s2)
 		  //d.point(p1[0],p1[1])
+		  d._renderer._setFill(d.drawingContext.createPattern(roof.canvas, 'repeat'));
 		  // d.arc(p1[0]+(p2[0]-p1[0])/2, p1[1], (p2[0]-p1[0]), 30*cnv*s2, -PI, 0, PIE);
 		  d.pop();
 		  break;
@@ -223,7 +484,7 @@ makeRoof()
 				winCordY=recY-(winY+gapY)*y
 				d.push()
 				d.colorMode(RGB)
-				fill=map(fxrand(),0,1,0,255)
+				fill=map(fxrand(),0,1,20,255)
 				
 				// d.fill(41.82,100,map(fxrand(),0,1,78,100))
 				
@@ -296,38 +557,158 @@ makeRoof()
 				d.pop()
 				// d.point(recX+(winSize)*x,recY+(winSize)*y)
 			  }
+
 		  }
+		  
+		  			d.push()//ağaç
+					
+					// d.drawingContext.shadowBlur = 50.5*cnv*s2
+					// d.drawingContext.shadowOffsetX = -1*s2*cnv;
+					// d.drawingContext.shadowColor = color(0)
+					
+					// d.imageMode(CORNER)
+					// print(tree.height)
+					
+					// d.strokeWeight(20)
+					// d.stroke("blue")
+					// d.point(recX+map(fxrand(),0,1,-30*cnv*s2,10*cnv*s2),recY+20*cnv*s2)
+					// map(fxrand(),0,1,1.05*cnv*s2,1.3*cnv*s2)
+					
+					d.colorMode(HSL,360,100,100)
+						tC=color(map(fxrand(),0,1,40,100), map(fxrand(),0,1,20,30), map(fxrand(),0,1,40,50))
+						d.drawingContext.shadowColor = color(tC)
+						d.drawingContext.shadowOffsetX = 0.002*s2*cnv;
+						d.drawingContext.shadowBlur = 0.001*s2*cnv;
+					
+					
+					treeq="tree"+floor(map(fxrand(),0,1,1,6))
+					// eval(treeq)
+					ssTree=map(fxrand(),0,1,0.7,1)
+					treeTemp=createGraphics(eval(treeq).width*ssTree,eval(treeq).height*ssTree)
+					treeTemp.push()
+					// treeTemp.scale(int(2*cnv*s2),int(map(fxrand(),0,1,150*cnv*s2,200*cnv*s2)))
+					treeTemp.scale(ssTree,ssTree)
+					if(fxrand()<0.5){
+					treeTemp.translate(eval(treeq).width,0)
+					treeTemp.scale(-1,1)
+					}
+					// treeTemp.tint(50,200)
+					treeTemp.image(eval(treeq),0,5*cnv*s2)
+					
+					
+					
+					// treeTemp.scale(40*cnv*s2,100*cnv*s2)
+					// treeTemp.filter(BLUR, 1);
+					// d.tint(50,50)
+					// treeTemp.scale(int(2*cnv*s2),int(map(fxrand(),0,1,150*cnv*s2,200*cnv*s2)))
+					// d.scale(1.3)
+					// d.scale(1/1.3)
+					d.drawingContext.shadowColor = color(41, 55, 27)
+						d.drawingContext.shadowOffsetX = 0.2*s2*cnv;
+						d.drawingContext.shadowBlur = 0.001
+					d.translate(0,-treeTemp.height)
+					// d.image(tree,0,0)
+					d.image(treeTemp,recX+map(fxrand(),0,1,-30*cnv*s2,10*cnv*s2)-30*cnv*s2,recY+20*cnv*s2)
+					// tree.resize(40*cnv*s2,100*cnv*s2)
+					// d.image(tree,recX+map(fxrand(),0,1,-30*cnv*s2,10*cnv*s2),recY-107*cnv*s2)
+					// d.rect(recX+map(fxrand(),0,1,-30*cnv*s2,30*cnv*s2),recY+19*cnv*s2,20*cnv*s2,-150*cnv*s2)
+					// tree.filter(BLUR, -1);
+					treeTemp.pop()
+					d.pop()
+		  
+		  
 	  if(recX>canvas){c=(800/scaleAll)+30} //sınırsız üretimi durdurmak için kullanılan fonksiyon. incele.
 	  recX+=countX*(gapX+winX)+gapX
 	  
-	  }
-	}
-}
-
-function draw() {
-  //background(220);
-
-  	// t1.rect(100,100,100,100)
-	// t1.rect(100,200,100,100)
-		  	
-	for(x=0;x<katmanSayısı;x++){
+	  } 
+	
+	
+	 for(x=0;x<5000*cnv/scaleAll;x++){
+			  d.image(eval("people"+int(map(fxrand(),0,1,1,30))), map(fxrand(),0,1,0,canvas), recY+3*cnv*s2)
+			  }
+	
+	
+			if(layer==katmanSayısı-1){
+			// print("yer")
+			d.push()
+			// d.fill(50)
+			roof.background(70)//39,58,68
+			roof.image(baklava,0,0)
+			d._renderer._setFill(d.drawingContext.createPattern(roof.canvas, 'repeat'));
+			d.rect(0,recY+winY,canvas+300*cnv*s2,20*cnv*s2)//yer: tam oturmuyor
+			 
+			d.pop()
+		}
+	
+	
+	
 		if(x==0){//son katmandaki gölgeyi siliyor
 			
-			image(eval("drawingLayer"+x),-20*cnv,0)
+			image(d,-20*cnv,0)
 		}else{
 			
-		drawingContext.shadowBlur = 80*s2*cnv
-			drawingContext.shadowColor = color(0)
+		drawingContext.shadowBlur = 50*s2*cnv//80di eskiden
+			drawingContext.shadowColor = color(2)
+			// drawingContext.shadowColor = color(0,0,0,170)
 			drawingContext.shadowOffsetY = -10*s2*cnv;
-	image(eval("drawingLayer"+x),-20*cnv,0)
-		}
+			
+	image(d,-20*cnv,0)
+		print(layer)
 	}
+	
+	layer++
+	// }
+}
+else{
+	nextLayer=1}
+				
+			if (nextLayer==1){
+			push()
+			allimg=get()
+			translate(canvas/2,canvas/2)
+			scale(1,-1/3)
+			// tint(255, 40);
+			allimg.filter(BLUR, 4*cnv*s2);
+			image(allimg,-canvas/2,-canvas*2-149*cnv*s2)
+			
+			pop()
 
-	// makeRoof()
-	// image(roof,0,0)
-	// image(yan,0,0)
-	// image(dik,0,0)
-  noLoop()
+
+
+			denizStart=recY+37*cnv*s2
+				sea.push()
+			// print(üstKatman)
+			colorMode(RGB)
+			segment=1200*cnv/scaleAll
+			 // from = color(16.32, 59.81, 102);	
+			 // from = color(50);//black
+			 from = color(31, 42, 54)//black	
+			 to = color(16.32, 59.81, 102);
+			 // to = color(16.32, 30, 50); //dark blue
+			 // (92.33,161.69,228.97)
+			 // (68.53, 136, 201.45);
+				for(x=0;x<segment;x++){
+					cc=lerpColor(from, to, map(x,0,segment,0,1))
+					// sea.noStroke()
+					// sea.stroke(200)
+					sea.strokeWeight(0.07*cnv*s2)
+					sea.fill(cc)
+					// sea.setAlpha(255)
+				sea.rect(0,denizStart+((canvas-denizStart)/segment)*x,canvas,(canvas-denizStart)/segment+2*cnv*s2)
+				}
+			sea.pop()
+			push()
+			tint(255, 190);
+			image(sea,0,0)
+			pop()
+	addGrain(15*cnv)
+	
+	print("camiCount",camiCount)
+	noLoop()
+			}
+
+  
+  
 }
 
 function fillInside(x,y){
@@ -371,9 +752,11 @@ function fillInside(x,y){
 					break;
 			}
 	inside.push()
-	inside.scale(0.06*cnv*s2,0.06*cnv*s2)
 	inside.imageMode(BOTTOM)
-	inside.image(img, map(fxrand(),0,1,-winX*8,winX*8)*cnv*s2, 120*cnv)
+	// inside.scale(0.12*cnv*s2,0.12*cnv*s2)
+	// print(eval("people"+int(map(fxrand(),0,1,1,31))))
+	inside.image(eval("people"+int(map(fxrand(),0,1,1,30))), map(fxrand(),0,1,-winX*2,winX*2), 8*cnv*s2)
+	inside.image(eval("people"+int(map(fxrand(),0,1,1,30))), map(fxrand(),0,1,-winX*2,winX*2), 8*cnv*s2)
 	inside.pop()
 	d.translate(x,y)
 	d.image(inside,0,0)
@@ -421,10 +804,13 @@ function fillInsideBalkon(x,y){
 
 					break;
 			}
+	
 	insideBalkon.push()
-	insideBalkon.scale(0.06*cnv*s2,0.06*cnv*s2)
 	insideBalkon.imageMode(BOTTOM)
-	insideBalkon.image(img, map(fxrand(),0,1,-winX*8,winX*8)*cnv*s2, 120*cnv)
+	// insideBalkon.scale(0.12*cnv*s2,0.12*cnv*s2)
+	// print(eval("people"+int(map(fxrand(),0,1,1,31))))
+	insideBalkon.image(eval("people"+int(map(fxrand(),0,1,1,30))), map(fxrand(),0,1,-winX*2,winX*2), 8*cnv*s2)
+	insideBalkon.image(eval("people"+int(map(fxrand(),0,1,1,30))), map(fxrand(),0,1,-winX*2,winX*2), 8*cnv*s2)
 	insideBalkon.pop()
 	d.translate(x,y)
 	d.image(insideBalkon,0,0)
@@ -525,14 +911,14 @@ function makeYan(){
 }
 function makeRoof(){
 	for(x=0;x<canvas*2;x+=3*cnv*s2){
-			roof.strokeWeight(0.12*cnv*s2)
-			roof.stroke(0)
-			roof.line(x,0,0,x)
+			baklava.strokeWeight(0.12*cnv*s2)
+			baklava.stroke(0)
+			baklava.line(x,0,0,x)
 		}
 		for(y=0;y<canvas*2;y+=3*cnv*s2){
-			roof.strokeWeight(0.12*cnv*s2)
-			roof.stroke(0)
-			roof.line(canvas-y,0,canvas,y)
+			baklava.strokeWeight(0.12*cnv*s2)
+			baklava.stroke(0)
+			baklava.line(canvas-y,0,canvas,y)
 		}
 
 }
@@ -544,4 +930,30 @@ function makeRoof(){
 			// yanTemp.line(0,y,canvas,y)
 		// }
 
+// }
+
+
+
+
+function addGrain(qty = 20) {
+  loadPixels();
+  let pD = pixelDensity();
+  let halfImage = 5 * (width * pD) * (height * pD);//pixel density. pixels.lenght
+  for (let i = 0; i < halfImage; i += 4) {
+    pixels[i] += round(qty * (fxrand() - 0.5));
+    pixels[i + 1] += round(qty * (fxrand() - 0.5));
+    pixels[i + 2] += round(qty * (fxrand() - 0.5));
+  }
+  updatePixels();
+}
+
+
+// function createGrainImage(e = 30, t = 255) {
+	// let a = createImage(canvas * 1, canvas * 1);
+	// a.loadPixels();
+	// for(let l = 0; l < a.pixels.length; l += 4) {
+		// let o = random(-e / 2, e / 2);
+		// a.pixels[l] += 127 + o, a.pixels[l + 1] = 127 + o, a.pixels[l + 2] = 127 + o, a.pixels[l + 3] = t
+	// }
+	// return a.updatePixels(), a
 // }
