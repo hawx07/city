@@ -32,7 +32,7 @@
 // scale 50 den bakınca en arkadaki katman birden bitiyor. oraya fazladan katman ekle
 //araba ve ağaç
 
-night=0
+
 let img,people;
 let photo;
 
@@ -40,6 +40,7 @@ function preload() {
   // img = loadImage('./d1.svg');
   // people = loadImage('./pe.svg');
   tree = loadImage('./SVG/tree(5).svg');
+  night=0
   night=int(map(fxrand(), 0, 1, 0, 2))
   // cami = loadImage('./c1.svg');
   // cami = loadImage('./4x/SVG/Asset 1.svg');
