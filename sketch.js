@@ -32,7 +32,7 @@
 // scale 50 den bakınca en arkadaki katman birden bitiyor. oraya fazladan katman ekle
 //araba ve ağaç
 
-
+night=0
 let img,people;
 let photo;
 
@@ -43,7 +43,7 @@ function preload() {
   
   // cami = loadImage('./c1.svg');
   // cami = loadImage('./4x/SVG/Asset 1.svg');
-  cami = loadImage('./SVG/Asset2.png');
+  
   // cami = loadImage('./d1.svg');
 
   for(x=1;x<30;x++){
@@ -59,6 +59,12 @@ function preload() {
 }
 
 function setup() {
+	night=int(map(fxrand(), 0, 1, 0, 2))
+	if(night){
+	 cami = loadImage('./SVG/Asset3.png'); 
+  }else{
+  cami = loadImage('./SVG/Asset2.png');
+  }
 	  // print("h",cami.height)
 	// print("w",cami.width)
 	print(pixelDensity())
@@ -86,6 +92,7 @@ function setup() {
 sky=createGraphics(canvas, canvas)
 sea=createGraphics(canvas, canvas)
 baklava=createGraphics(canvas, canvas)
+fillPattern1 = createGraphics(canvas*2, canvas);
 // background(62,186,207)
   // recH=map(fxrand(), 0, 1, 50, canvas)
   // recW=map(fxrand(), 0, 1, 50, canvas)
@@ -104,6 +111,9 @@ baklava=createGraphics(canvas, canvas)
   //----------------------parameters
   // scaleAll=int(map(fxrand(), 0, 1, 50, 150)) //100
   // scaleAll=50
+  
+  
+  
   
   sAngle=int(map(fxrand(),0,1,0,2))
 	switch(sAngle){
@@ -168,7 +178,7 @@ baklava=createGraphics(canvas, canvas)
 		  }
   
   
-  // scaleType=2
+  // scaleType=3
  scaleType=floor(map(fxrand(), 0, 1, 0, 4))
   		  switch(scaleType){
 		  case 0:
@@ -250,6 +260,59 @@ randHue=map(fxrand(),0,1,0,300)
   recY-=katmanGap*katmanSayısı
 layer=0
 nextLayer=0
+
+
+
+fillPattern1.background("white")
+
+//----------------------------moon
+	
+	
+	push();
+	colorMode(RGB)
+	pC=color(200)
+	// fillPattern1.colorMode(HSL);
+	
+	//fillPattern1.background("#fd79a8");
+	// fillPattern1.background(pC);
+	fillPattern1.colorMode(RGB);
+
+	fillPattern1.fill(200,200,200,50)
+	fillPattern1.noStroke();
+	for ( i = 0; i < 1000; i++){
+		 x = map(fxrand(), 0, 1, 0, canvas);
+		 y = map(fxrand(), 0, 1, 0, canvas);
+		 r = map(fxrand(), 0, 1, 50*cnv*s2, 100*cnv*s2);
+		fillPattern1.ellipse(x, y, r);
+	}
+	for (let i = 0; i < 6000; i++){
+		let x = map(fxrand(), 0, 1, 0, canvas);
+		let y = map(fxrand(), 0, 1, 0, canvas);
+		fillPattern1.stroke(200,200,200,100);
+		fillPattern1.strokeWeight(map(fxrand(), 0, 1, 5*cnv*s2, 10*cnv*s2));
+		fillPattern1.point(x, y);
+	}
+
+		 newC=color(10,10,10,8)
+	// newC.setAlpha(2)
+	//fillPattern1.colorMode(RGB);
+	// fillPattern1.newC.setAlpha(color)
+	fillPattern1.fill(newC)
+	fillPattern1.noStroke();
+	for (let i = 0; i < 10000; i++){
+		let x = map(fxrand(), 0, 1, 0, canvas);
+		let y = map(fxrand(), 0, 1, 0, canvas);
+		let r = map(fxrand(), 0, 1, 50*cnv*s2, 100*cnv*s2);
+		fillPattern1.ellipse(x, y, r);
+	}
+	pop();
+//----------------------------moon
+
+
+
+
+
+
 }
 
 function draw() {
@@ -276,9 +339,16 @@ function draw() {
 			 // from = color(221, 97, 45);
 			 from = color(186.15, 150.41, 91.21);
 			 to = color(68.53, 136, 201.45);
-
+				
 			 from = color(186.15, 150.41, 91.21);
-			 to = color(68.53, 136, 201.45);			 
+			 to = color(68.53, 136, 201.45);	
+
+			if(night){
+				from = color(27, 62, 95);
+			 to = color(20);
+				}
+
+			 
 				for(x=0;x<segment;x++){
 					cc=lerpColor(from, to, map(x,0,segment,0,1))
 					d.noStroke()
@@ -288,7 +358,52 @@ function draw() {
 			d.pop()
 			colorMode(HSL,360,100,100)
 			// d.image(sky,0,0)
+		if(night){
+			d.push()
+			d.stroke(255)
+			
+			for(x=0;x<5000*s2;x++){
+				d.strokeWeight(map(fxrand(),0,1,0.3*s2*cnv,1.5*s2*cnv))
+			d.point(map(fxrand(),0,1,0,canvas),map(fxrand(),0,1,0,canvas))
+			}
+			
+			// d.fill(0)
+			d.noStroke()
+			mX=map(fxrand(),0,1,50*cnv*s2,canvas-50*cnv*s2)
+			mY=map(fxrand(),0,1,0,300*cnv*s2)
+			mR=map(fxrand(),0,1,150*s2*cnv,250*s2*cnv)
+			moonCycle=floor(map(fxrand(),0,1,0,7))
+			// moonCycle=0
+			fillPattern1.fill(0,0,0,140)
+			fillPattern1.push()
+			fillPattern1.drawingContext.shadowColor = color(0,0,0)
+			fillPattern1.drawingContext.shadowBlur = 50*s2*cnv;
+			switch(moonCycle){
+				case 0:
+				fillPattern1.circle(mX+mR/5.5,mY,mR)//solhilal
+				print("Moon: Wanning Crescent")
+				break;
+				case 1:
+				fillPattern1.circle(mX-mR/5.5,mY,mR)//sağhilal
+				print("Moon: Waxing Crescent")
+				break;
+				case 2:
+				// fillPattern1.rect(mX,mY-mR/2,mR,mR)//solyarım
+				break;
+				case 3:
+				// fillPattern1.rect(mX,mY-mR/2,-mR,mR)//sağyarım
+				break;
+				("Moon: Full Moon")
+			}
+			fillPattern1.pop()
+			d._renderer._setFill(d.drawingContext.createPattern(fillPattern1.canvas, 'repeat'));
+						d.drawingContext.shadowColor = color(255,255,255,0.5)
+						d.drawingContext.shadowBlur = 200*s2*cnv;
+			d.circle(mX,mY,mR)
+			
+		d.pop()
 		
+		}
 		}
 		
 		
@@ -357,7 +472,7 @@ function draw() {
 			  d.stroke(50)
 			  d.strokeWeight(0.5*cnv*s2)
 			  d.fill(245-10*t)
-			  
+			  if(night){d.fill(130-10*t)}
 			  
 			d.rect(recX-6*cnv*s2,recY+19*cnv*s2-katmanGap/20*t,yolX,-katmanGap/20)
 			// d.fill(41, 55, 27,20)
@@ -490,7 +605,7 @@ function draw() {
 		  d.colorMode(HSL,360,100,100)
 		  
 		  cL=color(map(fxrand(), 0, 1, randHue, randHue+60),map(fxrand(), 0, 1, 0, 70),map(fxrand(), 0, 1, 80, 90))//70-80
-		  
+		  if(night){cL=color(map(fxrand(), 0, 1, randHue, randHue+60),map(fxrand(), 0, 1, 1, 5),map(fxrand(), 0, 1, 30, 45))}
 		  // cL=color(500)
 		  // cL=color(map(fxrand(), 0, 1, 0, 100),map(fxrand(), 0, 1, 0, 100),map(fxrand(), 0, 1, 40+12*(katmanSayısı-layer), 60+10*(katmanSayısı-layer)))
 		  roofDistance=recX-gapX-(recX+countX*(gapX+winX))
@@ -548,7 +663,7 @@ function draw() {
 		  
 
 		  d.strokeWeight(1/(katmanSayısı+1)*(layer+1)*s2/5)
-		  d.rect(recX-gapX,recY+winY,countX*(gapX+winX)+gapX,-countY*(gapY+winY)-gapX) //bina
+		  d.rect(recX-gapX,recY+winY,countX*(gapX+winX)+gapX,-countY*(gapY+winY)-gapX) //binaR
 		  d.push()
 		  d.noFill()
 		  
@@ -597,7 +712,9 @@ function draw() {
 		  d.stroke(39,58,68)
 		  // d.fill(39,58,68)
 		  roof.colorMode(HSL,360,100,100)
+		  
 		  roof.background(19.86,map(fxrand(),0,1,25,46),60)//39,58,68
+		  if(night){roof.background(19.86,map(fxrand(),0,1,5,20),20)}
 		  roof.image(baklava,0,0)
 		  d._renderer._setFill(d.drawingContext.createPattern(roof.canvas, 'repeat'));
 		  d.strokeWeight(0.2*cnv*s2)
@@ -914,7 +1031,9 @@ else{
 			translate(canvas/2,canvas/2)
 			scale(1,-1/3)
 			// tint(255, 40);
+			if(night){allimg.filter(BLUR, 5*cnv*s2);}else{
 			allimg.filter(BLUR, 4*cnv*s2);
+			}
 			image(allimg,-canvas/2,-canvas*2-149*cnv*s2)
 			
 			pop()
@@ -945,6 +1064,7 @@ else{
 			sea.pop()
 			push()
 			tint(255, 190);
+			if(night){tint(255, 100);}
 			image(sea,0,0)
 			pop()
 	// addGrain(15)
@@ -1015,6 +1135,7 @@ inside.pop()
 				inside.noStroke()
 				for(lr=0;lr<20;lr++){
 					inside.fill(37.41,50,map(fill,0,255,0,100),3)
+					if(night){inside.fill(37.41,50,map(fill,0,255,0,100),10)}
 				inside.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,20*cnv*s2-lr*cnv*s2)
 				}
 				inside.pop()
@@ -1043,6 +1164,7 @@ inside.pop()
 				inside.noStroke()
 				for(lr=0;lr<20;lr++){
 					inside.fill(37.41,50,map(fill,0,255,0,100),3)
+					if(night){inside.fill(37.41,50,map(fill,0,255,0,100),10)}
 				inside.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,20*cnv*s2-lr*cnv*s2)
 				}
 				inside.pop()
@@ -1118,6 +1240,7 @@ insideBalkon.pop()
 				insideBalkon.noStroke()
 				for(lr=0;lr<20;lr++){
 					insideBalkon.fill(37.41,50,map(fill,0,255,0,100),3)
+					if(night){inside.fill(37.41,50,map(fill,0,255,0,100),10)}
 				insideBalkon.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,20*cnv*s2-lr*cnv*s2)
 				}
 				insideBalkon.pop()
@@ -1143,6 +1266,7 @@ insideBalkon.pop()
 				insideBalkon.noStroke()
 				for(lr=0;lr<20;lr++){
 					insideBalkon.fill(37.41,50,map(fill,0,255,0,100),3)
+					if(night){inside.fill(37.41,50,map(fill,0,255,0,100),10)}
 				insideBalkon.circle(winX/2-1*cnv*s2,lambaLine*cnv*s2,20*cnv*s2-lr*cnv*s2)
 				}
 				insideBalkon.pop()
@@ -1176,6 +1300,7 @@ function makeKlima(){
 				case 0:
 				break;
 				case 1:
+				if(night){d.fill(130)}
 				d.push()
 					d.push()
 						d.drawingContext.shadowColor = color(0,0,0,0.4)
@@ -1236,8 +1361,9 @@ function makePerde(){
 				  d.strokeWeight(0.4*s2*cnv)
 				  panjurLevel=int(map(fxrand(),0,1,0,winY))
 				  panjurDense=1.5*s2*cnv
-				  d.fill(255)
 				  
+				  d.fill(255)
+				  if(night){d.fill(130)}
 				  d.rect(winCordX,winCordY,winX,panjurDense*panjurLevel/panjurDense)
 				  for(t2=0;t2<panjurLevel/panjurDense;t2++){
 					  d.line(winCordX,winCordY+panjurDense*t2,winCordX+winX,winCordY+panjurDense*t2)
