@@ -40,7 +40,7 @@ function preload() {
   // img = loadImage('./d1.svg');
   // people = loadImage('./pe.svg');
   tree = loadImage('./SVG/tree(5).svg');
-  night=int(map(fxrand(), 0, 1, 0, 2))
+  // night=int(map(fxrand(), 0, 1, 0, 2))
   // cami = loadImage('./c1.svg');
   // cami = loadImage('./4x/SVG/Asset 1.svg');
   if(night){
