@@ -69,10 +69,11 @@ function setup() {
      Adcanvas = sort(screen, 0);
     print(Adcanvas[0]);
     canvas = Adcanvas[0];
+	// canvas = 2000
 	orjCanvas=canvas
-	
+	isSave=0
     createCanvas(canvas, canvas);
-	canvas = Adcanvas[0];
+	// canvas = Adcanvas[0];
 	cnv=canvas/800
   // recY=map(fxrand(), 0, 1, 0, canvas)
   
@@ -167,8 +168,8 @@ baklava=createGraphics(canvas, canvas)
 		  }
   
   
-  scaleType=2
- // scaleType=floor(map(fxrand(), 0, 1, 0, 4))
+  // scaleType=2
+ scaleType=floor(map(fxrand(), 0, 1, 0, 4))
   		  switch(scaleType){
 		  case 0:
 			  print("Camera: Far")
@@ -183,8 +184,8 @@ baklava=createGraphics(canvas, canvas)
 			  scaleAll=150
 		  break;
 		  case 3:
-			  print("Camera: Close")
-			  scaleAll=150
+			  print("Camera: Far")
+			  scaleAll=50
 		  break;
 		  }
 		  
@@ -253,11 +254,10 @@ nextLayer=0
 
 function draw() {
   //background(220);
-
   	// t1.rect(100,100,100,100)
 	// t1.rect(100,200,100,100)
 		if(layer<katmanSayısı){	
-
+		
     // for(layer=0;layer<katmanSayısı;layer++){
 		if(layer==0){üstKatman=recY}
 
@@ -905,6 +905,7 @@ else{
 	nextLayer=1}
 				
 			if (nextLayer==1){
+				
 				drawingContext.shadowBlur = 50*s2*cnv//80di eskiden
 			drawingContext.shadowColor = color(2)
 			drawingContext.shadowOffsetY = -2*s2*cnv;
@@ -924,7 +925,7 @@ else{
 				sea.push()
 			// print(üstKatman)
 			colorMode(RGB)
-			segment=1200*cnv/scaleAll
+			segment=1200/scaleAll
 			 // from = color(16.32, 59.81, 102);	
 			 // from = color(50);//black
 			 from = color(31, 42, 54)//black	
@@ -946,9 +947,10 @@ else{
 			tint(255, 190);
 			image(sea,0,0)
 			pop()
+	// addGrain(15)
 	addGrain(15*cnv)
-	
 	print("camiCount",camiCount)
+	if(isSave){saveCanvas('myCanvas', 'jpg')}
 	noLoop()
 			}
 
@@ -1279,17 +1281,6 @@ function makeRoof(){
 
 }
 
-// function makeYan(){
-	// for(y=0;y<canvas;y+=3*cnv*s2){
-			// yanTemp.strokeWeight(0.12*cnv*s2)
-			// yanTemp.stroke(0)
-			// yanTemp.line(0,y,canvas,y)
-		// }
-
-// }
-
-
-
 
 function addGrain(qty = 20) {
   loadPixels();
@@ -1332,8 +1323,99 @@ function DaddGrain(qty = 20) {
 function keyTyped() {
   if (key === 'a') {
     print("a")
-	// background(255)
-	// redraw()
-	draw()
+	background(255)
+	pixelDensity(1);
+	camiCount=0
+      screen = [windowWidth, windowHeight]
+     Adcanvas = sort(screen, 0);
+    print(Adcanvas[0]);
+    canvas = Adcanvas[0];
+	canvas = 2000
+	orjCanvas=canvas
+	
+    createCanvas(canvas, canvas);
+	// canvas = Adcanvas[0];
+	cnv=canvas/800
+  // recY=map(fxrand(), 0, 1, 0, canvas)
+  
+  dik=createGraphics(canvas, canvas)
+  yan=createGraphics(canvas, canvas)
+  roof=createGraphics(canvas, canvas)
+  dikTemp=createGraphics(canvas, canvas)
+  yanTemp=createGraphics(canvas, canvas)
+  pointPopulate=createGraphics(canvas, canvas)
+sky=createGraphics(canvas, canvas)
+sea=createGraphics(canvas, canvas)
+baklava=createGraphics(canvas, canvas)
+	  
+		  
+	s2=scaleAll/100
+	
+	slopetogap=slope*2
+   katmanGap=slopetogap*s2*cnv//60
+  if(scaleAll==50){katmanSayısı=int(15/(katmanGap/(60*s2*cnv)))}else{katmanSayısı=int(12/(katmanGap/(60*s2*cnv)))}
+  // katmanSayısı=10
+  
+ 
+  // sonKatmanY=katmanGap*katmanSayısı
+  // print(sonKatmanY)
+  // for(aa=1;aa<30;aa++){
+			  // eval("people"+aa).resize(eval("people"+aa).width/9*cnv*s2,eval("people"+aa).height/9*cnv*s2)
+			  // }
+  
+  // ----------------------/parameters
+  // treeOran=tree.height/tree.width
+  // treeHH=60*s2*cnv
+  // cami2=createGraphics(cami.width, cami.height)
+  // cami2.image(cami,0,0)
+	// cami=cami2
+  // cami.resizeCanvas(360*cnv*s2,360*cnv*s2)
+  // cami.resize(0,360*cnv*s2)
+  // for(x=1;x<6;x++){
+  
+  // eval("tree"+x).resize(80*s2*cnv,0)//ağaçları aynı boyuta getir
+  
+  // }
+dik.colorMode(HSL,360,100,100)
+yan.colorMode(HSL,360,100,100)
+makeDik()
+makeYan()
+makeRoof()
+
+// for(x=0;x<canvas;x+=4*cnv*s2){
+		// for(y=0;y<canvas;y+=4*cnv*s2){
+		// pointPopulate.point(x,y)
+	// }
+// }
+// for(x=0;x<40000000/(scaleAll*2);x+=1){
+	// pointPopulate.strokeWeight(0.10*cnv*s2)
+			// pointPopulate.stroke(100)
+// pointPopulate.point(map(fxrand(),0,1,0,canvas),map(fxrand(),0,1,0,canvas))
+// }
+// randHueGrad=map(fxrand(),0,1,1,6)
+randHue=map(fxrand(),0,1,0,300)
+  gapX=6*s2*cnv
+  gapY=14*s2*cnv
+  winX=13*s2*cnv
+  winY=19*s2*cnv
+  inside=createGraphics(winX-2*cnv*s2, winY-2*cnv*s2)
+  insideBalkon=createGraphics(winX-2*cnv*s2, winY+5*cnv*s2)
+  colorMode(HSL,360,100,100)
+  recY=orjCanvas-100*cnv
+  for (var i = -1; i < katmanSayısı+2; i++) {
+   this["drawingLayer"+i] = createGraphics(canvas+200*cnv, canvas)
+}
+  
+  recY-=katmanGap*katmanSayısı
+layer=0
+nextLayer=0
+isSave=1
+	// for(draw=0;draw<10;draw++){
+	// print("draw",draw)
+	
+	loop()
+	
+  // }
+	// draw()
   } 
 }
