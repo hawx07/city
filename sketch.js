@@ -40,10 +40,14 @@ function preload() {
   // img = loadImage('./d1.svg');
   // people = loadImage('./pe.svg');
   tree = loadImage('./SVG/tree(5).svg');
-  
+  night=int(map(fxrand(), 0, 1, 0, 2))
   // cami = loadImage('./c1.svg');
   // cami = loadImage('./4x/SVG/Asset 1.svg');
-  
+  if(night){
+	 cami = loadImage('./SVG/Asset3.png'); 
+  }else{
+  cami = loadImage('./SVG/Asset2.png');
+  }
   // cami = loadImage('./d1.svg');
 
   for(x=1;x<30;x++){
@@ -59,12 +63,8 @@ function preload() {
 }
 
 function setup() {
-	night=int(map(fxrand(), 0, 1, 0, 2))
-	if(night){
-	 cami = loadImage('./SVG/Asset3.png'); 
-  }else{
-  cami = loadImage('./SVG/Asset2.png');
-  }
+	
+	
 	  // print("h",cami.height)
 	// print("w",cami.width)
 	print(pixelDensity())
